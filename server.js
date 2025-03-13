@@ -3,6 +3,14 @@ const bodyParser = require("body-parser");
 const { Builder, By } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 const app = express();
+const path = require("path");
+
+// Serve static files (HTML, CSS, JS)
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 app.use(bodyParser.json());
 app.use(express.static("public")); // Serve frontend files
