@@ -1,9 +1,8 @@
-// Debugging: Check if script is loaded
-console.log("Script loaded!");
+// Debugging: Check if script is loading
+alert("Script loaded!"); // Shows an alert when script.js loads
 
-// Wait for DOM to fully load before running scripts
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOM is fully loaded!");
+    alert("DOM fully loaded!"); // Shows an alert when the page is ready
 
     // Get form elements
     let passwordField = document.getElementById("password");
@@ -13,13 +12,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Ensure elements exist before adding event listeners
     if (!passwordField || !showPasswordBtn || !loginForm) {
-        console.error("Error: One or more elements not found!");
+        alert("Error: One or more elements not found!");
         return;
     }
 
     // Show/Hide Password Toggle
     showPasswordBtn.addEventListener("click", function () {
-        console.log("Show Password button clicked!");
+        alert("Show Password button clicked!"); // Debugging
         if (passwordField.type === "password") {
             passwordField.type = "text";
             this.textContent = "Hide";
@@ -32,17 +31,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // Login Form Submission
     loginForm.addEventListener("submit", async function (e) {
         e.preventDefault();
+        alert("Form submitted!"); // Debugging
 
         let email = document.getElementById("email").value;
         let password = passwordField.value;
         let termsAccepted = document.getElementById("terms").checked;
 
         if (!termsAccepted) {
-            errorMessage.textContent = "You must agree to the Terms and Conditions.";
+            alert("You must agree to the Terms and Conditions.");
             return;
         }
 
-        errorMessage.textContent = "Logging in...";
+        alert("Logging in...");
 
         try {
             let response = await fetch("/api/login", {
@@ -53,13 +53,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             let result = await response.json();
             if (response.ok) {
+                alert("Login successful! Redirecting...");
                 window.location.href = "/dashboard"; // Redirect on success
             } else {
-                errorMessage.textContent = result.error || "Login failed.";
+                alert("Login failed: " + (result.error || "Unknown error"));
             }
         } catch (error) {
-            console.error("Error:", error);
-            errorMessage.textContent = "Server error. Try again later.";
+            alert("Server error. Try again later.");
         }
     });
 });
