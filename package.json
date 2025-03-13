@@ -21,6 +21,6 @@
     "node": ">=18"
   },
   "keywords": ["facebook", "autoliker", "selenium", "express"],
-  "author": "Your Name",
+  "author": "Ryle Cohner",
   "license": "MIT"
 }
