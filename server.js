@@ -1,5 +1,4 @@
 const express = require("express");
-const path = require("path");
 const bodyParser = require("body-parser");
 const { Builder, By } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
@@ -7,16 +6,12 @@ const chrome = require("selenium-webdriver/chrome");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Serve static files (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, "public")));
+// Middleware
+app.use(bodyParser.json());
+app.use(express.static("public")); // Serve frontend
 
-// Serve index.html for root route
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-// API Route for Facebook Login
-app.post("/api/login", bodyParser.json(), async (req, res) => {
+// Fix: Ensure `/api/login` exists as a POST route
+app.post("/api/login", async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -25,7 +20,7 @@ app.post("/api/login", bodyParser.json(), async (req, res) => {
 
     let driver;
     try {
-        console.log(`Attempting login for: ${email}`);
+        console.log(`Logging in with: ${email}`);
 
         let options = new chrome.Options();
         options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
@@ -61,5 +56,5 @@ app.post("/api/login", bodyParser.json(), async (req, res) => {
     }
 });
 
-// Start Server
+// Start server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
