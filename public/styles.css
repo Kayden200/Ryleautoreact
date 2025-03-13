@@ -1,31 +1,32 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f5f5f5;
+    background-color: #f8f9fa;
+    text-align: center;
     margin: 0;
+    padding: 0;
 }
 
 .container {
+    width: 90%;
+    max-width: 400px;
     background: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 50px auto;
 }
 
 h1 {
-    margin-bottom: 5px;
+    color: #1877f2;
 }
 
 .developer {
-    color: blue;
+    color: #1877f2;
     font-weight: bold;
 }
 
+/* Form Styles */
 label {
     display: block;
     text-align: left;
@@ -40,48 +41,64 @@ input {
     border-radius: 5px;
 }
 
+/* Password Field Fixes */
 .password-container {
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .password-container input {
     flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white; /* Ensure background is visible */
+    pointer-events: auto; /* Ensure it's clickable */
+    opacity: 1; /* Make sure it's visible */
 }
 
 .password-container button {
-    margin-left: 5px;
-    padding: 5px;
+    margin-left: 10px;
+    padding: 8px;
+    background-color: #1877f2;
+    color: white;
     border: none;
-    background-color: #ddd;
     cursor: pointer;
+    border-radius: 5px;
 }
 
-.password-container button:hover {
-    background-color: #bbb;
-}
-
+/* Checkbox Fix */
 .terms {
     display: flex;
     align-items: center;
     margin-top: 10px;
 }
 
-.terms input {
+.terms input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
     margin-right: 5px;
 }
 
-button {
-    width: 100%;
-    padding: 10px;
-    background-color: blue;
+/* Button Styles */
+button[type="submit"] {
+    background: #1877f2;
     color: white;
     border: none;
-    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
     cursor: pointer;
-    margin-top: 15px;
+    border-radius: 5px;
+    width: 100%;
 }
 
-button:hover {
-    background-color: darkblue;
+button[type="submit"]:hover {
+    background: #0f65d3;
+}
+
+#errorMessage {
+    color: red;
+    margin-top: 10px;
 }
