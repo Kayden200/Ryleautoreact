@@ -1,36 +1,38 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let loginForm = document.getElementById("login-form");
+    let reactionForm = document.getElementById("reaction-form");
 
-    loginForm.addEventListener("submit", async function (e) {
+    reactionForm.addEventListener("submit", async function (e) {
         e.preventDefault();
-        alert("Logging in...");
+        alert("Sending reaction...");
 
-        let email = document.getElementById("email").value;
-        let password = document.getElementById("password").value;
-        let termsAccepted = document.getElementById("terms").checked;
+        let postLink = document.getElementById("post-link").value;
+        let reactionType = document.getElementById("reaction-type").value;
 
-        if (!termsAccepted) {
-            alert("You must agree to the Terms and Conditions.");
+        // Get stored cookie from localStorage or sessionStorage
+        let cookie = localStorage.getItem("fb_cookie");
+
+        if (!cookie) {
+            alert("Error: You must log in to Facebook first.");
             return;
         }
 
         try {
-            let response = await fetch("/api/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password })
+            let response = await fetch(`/api/react?link=${encodeURIComponent(postLink)}&type=${reactionType}&cookie=${encodeURIComponent(cookie)}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" }
             });
 
             let result = await response.json();
+            console.log("API Response:", result);
 
             if (result.success) {
-                alert("Login successful! Redirecting...");
-                window.location.href = "/dashboard"; // Redirect to post reaction page
+                alert("Reaction sent successfully!");
             } else {
-                alert("Login failed: " + (result.error || "Unknown error"));
+                alert("Error: " + (result.error || "Reaction failed"));
             }
         } catch (error) {
             alert("Server error. Try again later.");
+            console.error("Fetch error:", error);
         }
     });
 });
