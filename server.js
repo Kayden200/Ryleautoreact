@@ -1,12 +1,22 @@
 const express = require("express");
+const path = require("path");
 const bodyParser = require("body-parser");
 const { Builder, By } = require("selenium-webdriver");
 const chrome = require("selenium-webdriver/chrome");
 
 const app = express();
-app.use(bodyParser.json());
+const PORT = process.env.PORT || 5000;
 
-app.post("/api/login", async (req, res) => {
+// Serve static files (HTML, CSS, JS)
+app.use(express.static(path.join(__dirname, "public")));
+
+// Serve index.html for root route
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// API Route for Facebook Login
+app.post("/api/login", bodyParser.json(), async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -15,8 +25,10 @@ app.post("/api/login", async (req, res) => {
 
     let driver;
     try {
+        console.log(`Attempting login for: ${email}`);
+
         let options = new chrome.Options();
-        options.addArguments("--headless", "--disable-blink-features=AutomationControlled");
+        options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage");
 
         driver = await new Builder().forBrowser("chrome").setChromeOptions(options).build();
         await driver.get("https://www.facebook.com/login");
@@ -25,20 +37,22 @@ app.post("/api/login", async (req, res) => {
         await driver.findElement(By.id("pass")).sendKeys(password);
         await driver.findElement(By.name("login")).click();
 
-        await driver.sleep(5000); // Wait for login
+        await driver.sleep(5000);
 
         let currentURL = await driver.getCurrentUrl();
         if (currentURL.includes("checkpoint")) {
+            console.log("Checkpoint detected!");
             return res.status(403).json({ error: "Facebook checkpoint detected. Use another account." });
         }
 
         let cookies = await driver.manage().getCookies();
         let cookieString = cookies.map(c => `${c.name}=${c.value}`).join("; ");
 
+        console.log("Login successful!");
         res.json({ message: "Login successful", cookie: cookieString });
 
     } catch (error) {
-        console.error("Login error:", error); // Log error in Render logs
+        console.error("Login error:", error);
         res.status(500).json({ error: "Server error. Try again later." });
     } finally {
         if (driver) {
@@ -47,5 +61,5 @@ app.post("/api/login", async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 5000;
+// Start Server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
