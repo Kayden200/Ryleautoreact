@@ -22,17 +22,15 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             let result = await response.json();
-            if (response.ok) {
+
+            if (result.success) {
                 alert("Login successful! Redirecting...");
-                console.log("Response:", result);
-                window.location.href = "/dashboard";
+                window.location.href = "/dashboard"; // Redirect to post reaction page
             } else {
                 alert("Login failed: " + (result.error || "Unknown error"));
-                console.log("Error Response:", result);
             }
         } catch (error) {
             alert("Server error. Try again later.");
-            console.error("Fetch error:", error);
         }
     });
 });
